@@ -23,12 +23,11 @@ public class OauthManager {
   private OAuth10aService service;
   private OAuth1AccessToken oauth1AccessToken;
 
-  OauthManager() {
+  public OauthManager() {
     consumerKey = System.getenv("CONSUMER_KEY");
     consumerSecret = System.getenv("CONSUMER_SECRET");
     accessToken = System.getenv("ACCESS_TOKEN");
     accessTokenSecret = System.getenv("ACCESS_TOKEN_SECRET");
-    System.out.println(System.getenv("CONSUMER_KEY"));
   }
 
   public OAuth1AccessToken getOauth1AccessToken() {

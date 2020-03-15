@@ -22,8 +22,11 @@ task buildZip(type: Zip) {
     from compileJava
     from processResources
     into('lib') {
-        from configurations.runtime
+        from configurations.runtimeClasspath
     }
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 build.dependsOn buildZip

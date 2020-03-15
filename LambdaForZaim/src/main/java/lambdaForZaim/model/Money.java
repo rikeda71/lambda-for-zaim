@@ -15,4 +15,12 @@ public class Money {
     this.total = total;
     this.amountForCategory = amountForCategory;
   }
+
+  public String toStringForCategory() {
+    String str = "";
+    for (Map.Entry<String, Integer> entry: getAmountForCategory().entrySet()) {
+      str += "\n" + entry.getKey() + ":\t" + entry.getValue();
+    }
+    return str;
+  }
 }

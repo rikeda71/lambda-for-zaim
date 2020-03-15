@@ -53,10 +53,7 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
         valueStr,
         money.getTotal()
     );
-    for (Map.Entry<String, Integer> entry: money.getAmountForCategory().entrySet()) {
-      output += "\n" + entry.getKey() + ":\t" + entry.getValue();
-    }
-    String message = "{ \"message\": \"" + output + "\"}";
+    String message = "{ \"message\": \"" + output + money.toStringForCategory() + "\n\"}";
 
     return new GatewayResponse(message, headers, 200);
   }
