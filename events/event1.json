@@ -1,6 +1,9 @@
 {
-    "n": 2,
-    "amountOnly": false,
-    "period": "month"
-  }
+    "httpMethod": "GET",
+    "queryStringParameters": {
+        "n": 2,
+        "amountOnly": false,
+        "period": "month"
+    }
+}
   

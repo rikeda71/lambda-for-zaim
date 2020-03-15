@@ -8,16 +8,17 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 20
+    Timeout: 15
 
 Resources:
   LambdaForZaim:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: LambdaForZaim
+      #CodeUri: LambdaForZaim/build/distributions/LambdaForZaim.zip
       Handler: lambdaForZaim.App::handleRequest
-      Runtime: java11
-      MemorySize: 512
+      Runtime: java8
+      MemorySize: 128
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
           CONSUMER_KEY:
@@ -29,7 +30,7 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /api/moneyinfo
-            Method: get
+            Method: GET
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -37,7 +38,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   LambdaForZaimApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/api/moneyinfo"
   LambdaForZaimFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt LambdaForZaimFunction.Arn

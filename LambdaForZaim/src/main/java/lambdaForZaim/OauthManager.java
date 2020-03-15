@@ -42,17 +42,17 @@ public class OauthManager {
     if (accessToken == null || accessTokenSecret == null) {
       oauthSign();
     }
-    return new HashMap<>() {{
-      put("AccessToken", accessToken);
-      put("AccessTokenSecret", accessTokenSecret);
-    }};
+    Map<String, String> map = new HashMap<>();
+    map.put("AccessToken", accessToken);
+    map.put("AccessTokenSecret", accessTokenSecret);
+    return map;
   }
 
   public void oauthSign() {
     service = new ServiceBuilder(consumerKey)
         .apiSecret(consumerSecret)
         .callback(callbackURL)
-        .build(ScribeZaimApi.instance());
+        .build(lambdaForZaim.ScribeZaimApi.instance());
     if (accessToken == null || accessTokenSecret == null) {
       try {
         final OAuth1RequestToken requestToken = service.getRequestToken();

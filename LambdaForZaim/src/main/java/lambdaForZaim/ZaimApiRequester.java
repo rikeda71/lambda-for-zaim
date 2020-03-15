@@ -56,7 +56,7 @@ public class ZaimApiRequester {
 
   public void requestMyCategories() {
     idToCategories = new HashMap<>();
-    var request = new OAuthRequest(Verb.GET, categoryURL);
+    OAuthRequest request = new OAuthRequest(Verb.GET, categoryURL);
     service.signRequest(accessToken, request);
     try {
       Response res = service.execute(request);
@@ -82,7 +82,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Income and amount spent n months ago
    */
-  public Money requestIncomeAndAmountNDaysAgo(int n) {
+  public lambdaForZaim.Money requestIncomeAndAmountNDaysAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusDays(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -95,7 +95,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Income and amount spent n months ago
    */
-  public Money requestIncomeAndAmountNMonthsAgo(int n) {
+  public lambdaForZaim.Money requestIncomeAndAmountNMonthsAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusMonths(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -108,7 +108,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Total amount spent n months ago
    */
-  public Money requestAmountNDaysAgo(int n) {
+  public lambdaForZaim.Money requestAmountNDaysAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusDays(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -121,7 +121,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Total amount spent n months ago
    */
-  public Money requestAmountNMonthsAgo(int n) {
+  public lambdaForZaim.Money requestAmountNMonthsAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusMonths(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -135,24 +135,23 @@ public class ZaimApiRequester {
    * @param end the date string of `to`
    * @return Total money spent in the period given by the arguments
    */
-  private Money requestMoneyWithDates(String start, String end, Boolean usedOnly) {
+  private lambdaForZaim.Money requestMoneyWithDates(String start, String end, Boolean usedOnly) {
     int totalMoney = 0;
     Map<String, Integer> totals = new HashMap<>();
-    var request = new OAuthRequest(Verb.GET, moneyURL);
+    OAuthRequest request = new OAuthRequest(Verb.GET, moneyURL);
 
-    Map<String, String> map = new HashMap<>() {{
-      put("start_date", start);
-      put("end_date", end);
-    }};
+    Map<String, String> map = new HashMap<>();
+    map.put("start_date", start);
+    map.put("end_date", end);
     map.forEach((k, v) -> request.addParameter(k, v));
     service.signRequest(accessToken, request);
 
     try {
       Response res = service.execute(request);
       String jsonStr = res.getBody();
-      var jsonmap = objectMapper.readValue(jsonStr, new TypeReference<HashMap<String, Object>>(){});
-      for (var moneyObj: ((List<Map<String, Object>>)jsonmap.get("money"))) {
-        var category = idToCategories.get((Integer) moneyObj.get("category_id"));
+      Map<String, Object> jsonmap = objectMapper.readValue(jsonStr, new TypeReference<HashMap<String, Object>>(){});
+      for (Map<String, Object> moneyObj: ((List<Map<String, Object>>)jsonmap.get("money"))) {
+        String category = idToCategories.get((Integer) moneyObj.get("category_id"));
         if ("payment".equals(moneyObj.get("mode"))) {
           if (totals.containsKey(category)) {
             totals.put(category, totals.get(category) - (int)moneyObj.get("amount"));
@@ -180,7 +179,7 @@ public class ZaimApiRequester {
       System.exit(-3);
     }
 
-    Money money = new Money(totalMoney, totals);
+    lambdaForZaim.Money money = new lambdaForZaim.Money(totalMoney, totals);
     return money;
   }
 }
