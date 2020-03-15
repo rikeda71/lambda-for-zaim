@@ -1,4 +1,4 @@
-package lambdaForZaim;
+package lambdaForZaim.model;
 
 import java.util.Map;
 import lombok.Data;
@@ -9,7 +9,6 @@ public class Money {
   private Map<String, Integer> amountForCategory;
 
   public Money() {
-
   }
 
   public Money(int total, Map<String, Integer> amountForCategory) {

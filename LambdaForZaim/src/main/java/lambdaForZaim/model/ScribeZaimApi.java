@@ -1,4 +1,4 @@
-package lambdaForZaim;
+package lambdaForZaim.model;
 
 import com.github.scribejava.core.builder.api.DefaultApi10a;
 

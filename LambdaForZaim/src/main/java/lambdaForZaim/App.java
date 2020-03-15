@@ -7,16 +7,18 @@ import java.util.Map;
 import com.amazonaws.services.lambda.runtime.Context;
 import lambdaForZaim.model.GatewayRequest;
 import lambdaForZaim.model.GatewayRequest.QueryStringParameters;
+import lambdaForZaim.model.GatewayResponse;
+import lambdaForZaim.model.Money;
 
 /**
  * Handler for requests to Lambda function.
  */
-public class App implements RequestHandler<GatewayRequest, lambdaForZaim.GatewayResponse> {
+public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
 
   private OauthManager manager = new OauthManager();
   private ZaimApiRequester apiRequester = null;
 
-  public lambdaForZaim.GatewayResponse handleRequest(GatewayRequest input, final Context context) {
+  public GatewayResponse handleRequest(GatewayRequest input, final Context context) {
     manager.oauthSign();
     apiRequester = new ZaimApiRequester(
         manager.getService(), manager.getOauth1AccessToken()
@@ -28,7 +30,7 @@ public class App implements RequestHandler<GatewayRequest, lambdaForZaim.Gateway
     int n = params.getN();
     boolean amountOnly = params.isAmountOnly();
     String period = params.getPeriod();
-    lambdaForZaim.Money money;
+    Money money;
 
     if (period.contains("month")) {
       money = amountOnly ?
@@ -40,7 +42,7 @@ public class App implements RequestHandler<GatewayRequest, lambdaForZaim.Gateway
           apiRequester.requestIncomeAndAmountNDaysAgo(n);
     } else {
       String output = "{ \"message\": \"invalid `period` value. `period` must be 'month' or 'day'.\" }";
-      return new lambdaForZaim.GatewayResponse(output, headers, 403);
+      return new GatewayResponse(output, headers, 403);
     }
     String valueStr = amountOnly ? "出費" : "収支";
 
@@ -56,7 +58,7 @@ public class App implements RequestHandler<GatewayRequest, lambdaForZaim.Gateway
     }
     String message = "{ \"message\": \"" + output + "\"}";
 
-    return new lambdaForZaim.GatewayResponse(message, headers, 200);
+    return new GatewayResponse(message, headers, 200);
   }
 
 }

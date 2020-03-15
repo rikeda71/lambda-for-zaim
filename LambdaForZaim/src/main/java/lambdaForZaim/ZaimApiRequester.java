@@ -8,6 +8,7 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import lambdaForZaim.model.Money;
 import lombok.Data;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -82,7 +83,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Income and amount spent n months ago
    */
-  public lambdaForZaim.Money requestIncomeAndAmountNDaysAgo(int n) {
+  public Money requestIncomeAndAmountNDaysAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusDays(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -95,7 +96,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Income and amount spent n months ago
    */
-  public lambdaForZaim.Money requestIncomeAndAmountNMonthsAgo(int n) {
+  public Money requestIncomeAndAmountNMonthsAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusMonths(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -108,7 +109,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Total amount spent n months ago
    */
-  public lambdaForZaim.Money requestAmountNDaysAgo(int n) {
+  public Money requestAmountNDaysAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusDays(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -121,7 +122,7 @@ public class ZaimApiRequester {
    * @param n : show how many months
    * @return Total amount spent n months ago
    */
-  public lambdaForZaim.Money requestAmountNMonthsAgo(int n) {
+  public Money requestAmountNMonthsAgo(int n) {
     return requestMoneyWithDates(
         LocalDate.now().minusMonths(n).format(formatter),
         LocalDate.now().format(formatter),
@@ -135,7 +136,7 @@ public class ZaimApiRequester {
    * @param end the date string of `to`
    * @return Total money spent in the period given by the arguments
    */
-  private lambdaForZaim.Money requestMoneyWithDates(String start, String end, Boolean usedOnly) {
+  private Money requestMoneyWithDates(String start, String end, Boolean usedOnly) {
     int totalMoney = 0;
     Map<String, Integer> totals = new HashMap<>();
     OAuthRequest request = new OAuthRequest(Verb.GET, moneyURL);
@@ -179,7 +180,7 @@ public class ZaimApiRequester {
       System.exit(-3);
     }
 
-    lambdaForZaim.Money money = new lambdaForZaim.Money(totalMoney, totals);
+    Money money = new Money(totalMoney, totals);
     return money;
   }
 }

@@ -1,4 +1,4 @@
-package lambdaForZaim;
+package lambdaForZaim.model;
 
 import java.util.Collections;
 import java.util.HashMap;

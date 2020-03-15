@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import lambdaForZaim.model.ScribeZaimApi;
 
 public class OauthManager {
   private String consumerKey = null;
@@ -52,7 +53,7 @@ public class OauthManager {
     service = new ServiceBuilder(consumerKey)
         .apiSecret(consumerSecret)
         .callback(callbackURL)
-        .build(lambdaForZaim.ScribeZaimApi.instance());
+        .build(ScribeZaimApi.instance());
     if (accessToken == null || accessTokenSecret == null) {
       try {
         final OAuth1RequestToken requestToken = service.getRequestToken();
