@@ -2,15 +2,9 @@ package lambdaForZaim;
 
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
-import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
 import lambdaForZaim.model.ScribeZaimApi;
 
 public class OauthManager {
@@ -42,46 +36,25 @@ public class OauthManager {
     if (accessToken == null || accessTokenSecret == null) {
       oauthSign();
     }
-    Map<String, String> map = new HashMap<>();
-    map.put("AccessToken", accessToken);
-    map.put("AccessTokenSecret", accessTokenSecret);
-    return map;
+    return new HashMap<>() {{
+      put("AccessToken", accessToken);
+      put("AccessTokenSecret", accessTokenSecret);
+    }};
   }
 
   public void oauthSign() {
+    if (consumerKey == null || consumerSecret == null) {
+      System.err.println("consumerKey or/and consumerSecret are `null`");
+      System.exit(-1);
+    } else if (accessToken == null || accessTokenSecret == null) {
+      System.err.println("accessToken or/and accessTokenSecret are `null`");
+      System.exit(-2);
+    }
     service = new ServiceBuilder(consumerKey)
         .apiSecret(consumerSecret)
         .callback(callbackURL)
         .build(ScribeZaimApi.instance());
-    if (accessToken == null || accessTokenSecret == null) {
-      try {
-        final OAuth1RequestToken requestToken = service.getRequestToken();
-        final String authUrl = service.getAuthorizationUrl(requestToken);
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
-
-        System.out.println("open this url with your browser");
-        System.out.println(authUrl);
-        Scanner in = new Scanner(System.in);
-        System.out.print("input oauth_verifier >> ");
-
-        oauth1AccessToken = service.getAccessToken(requestToken, in.nextLine());
-        accessToken = oauth1AccessToken.getToken();
-        accessTokenSecret = oauth1AccessToken.getTokenSecret();
-      } catch (ExecutionException e) {
-        System.out.println(e);
-        System.exit(-1);
-      } catch (InterruptedException e) {
-        System.out.println(e);
-        System.exit(-2);
-      } catch (IOException e) {
-        System.out.println(e);
-        System.exit(-3);
-      }
-    } else {
-        oauth1AccessToken = new OAuth1AccessToken(accessToken, accessTokenSecret);
-    }
+    oauth1AccessToken = new OAuth1AccessToken(accessToken, accessTokenSecret);
   }
-
 
 }

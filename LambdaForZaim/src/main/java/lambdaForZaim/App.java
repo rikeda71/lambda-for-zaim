@@ -23,9 +23,10 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     apiRequester = new ZaimApiRequester(
         manager.getService(), manager.getOauth1AccessToken()
     );
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Content-Type", "application/json");
-    headers.put("X-Custom-Header", "application/json");
+    var headers = new HashMap<String, String>() {{
+      put("Content-Type", "application/json");
+      put("X-Custom-Header", "application/json");
+    }};
     QueryStringParameters params = input.getQueryStringParameters();
     int n = params.getN();
     boolean amountOnly = params.isAmountOnly();
@@ -41,20 +42,19 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
           apiRequester.requestAmountNDaysAgo(n) :
           apiRequester.requestIncomeAndAmountNDaysAgo(n);
     } else {
-      String output = "{ \"message\": \"invalid `period` value. `period` must be 'month' or 'day'.\" }";
+      var output = "{ \"message\": \"invalid `period` value. `period` must be 'month' or 'day'.\" }";
       return new GatewayResponse(output, headers, 403);
     }
-    String valueStr = amountOnly ? "出費" : "収支";
 
-    String output = String.format(
+    var valueStr = amountOnly ? "出費" : "収支";
+    var output = String.format(
         "%d%s前までの%sは%d円です．",
         n,
         period,
         valueStr,
         money.getTotal()
     );
-    String message = "{ \"message\": \"" + output + money.toStringForCategory() + "\n\"}";
-
+    var message = "{ \"message\": \"" + output + money.toStringForCategory() + "\n\"}";
     return new GatewayResponse(message, headers, 200);
   }
 
