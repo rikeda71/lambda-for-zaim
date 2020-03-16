@@ -141,10 +141,11 @@ public class ZaimApiRequester {
     Map<String, Integer> totals = new HashMap<>();
     OAuthRequest request = new OAuthRequest(Verb.GET, moneyURL);
 
-    Map<String, String> map = new HashMap<>();
-    map.put("start_date", start);
-    map.put("end_date", end);
-    map.forEach((k, v) -> request.addParameter(k, v));
+    var tmpmap = new HashMap<String, String>() {{
+      put("start_date", start);
+      put("end_date", end);
+    }};
+    tmpmap.forEach((k, v) -> request.addParameter(k, v));
     service.signRequest(accessToken, request);
 
     try {
@@ -180,7 +181,6 @@ public class ZaimApiRequester {
       System.exit(-3);
     }
 
-    Money money = new Money(totalMoney, totals);
-    return money;
+    return new Money(totalMoney, totals);
   }
 }
