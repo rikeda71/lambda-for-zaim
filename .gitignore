@@ -72,3 +72,4 @@ fabric.properties
 *.iml
 modules.xml
 *.ipr
+*.toml

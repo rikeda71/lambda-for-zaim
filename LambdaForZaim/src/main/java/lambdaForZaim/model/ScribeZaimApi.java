@@ -9,7 +9,6 @@ public class ScribeZaimApi extends DefaultApi10a {
     private static final String REQUEST_TOKEN_RESOURCE = PROVIDER_URL + "request";
     private static final String ACCESS_TOKEN_RESOURCE = PROVIDER_URL + "access";
     protected ScribeZaimApi() {
-
     }
 
     private static class InstanceHolder {

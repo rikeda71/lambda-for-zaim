@@ -13,7 +13,7 @@ Resources:
   LambdaForZaim:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: LambdaForZaim
+      CodeUri: lambdaForZaim.zip
       Handler: lambdaForZaim.App::handleRequest
       Runtime: java8
       MemorySize: 128
