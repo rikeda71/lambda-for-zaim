@@ -29,6 +29,19 @@ Resources:
           Properties:
             Path: /api/moneyinfo
             Method: GET
+  ZaimToSlack:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ZaimToSlack
+      Handler: zaimtoslack.App::handleRequest
+      Runtime: java11
+      MemorySize: 128
+      Events:
+        ZaimToSlack:
+          Type: Api
+          Properties:
+            Path: /moneyinfo
+            Method: GET
 Parameters:
   ConsumerKey:
     Type: String
