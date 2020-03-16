@@ -15,7 +15,7 @@ Resources:
     Properties:
       CodeUri: LambdaForZaim
       Handler: lambdaForZaim.App::handleRequest
-      Runtime: java8
+      Runtime: java11
       MemorySize: 128
       Environment:
         Variables:
