@@ -2,7 +2,6 @@ package lambdaForZaim;
 
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import lambdaForZaim.model.GatewayRequest;
