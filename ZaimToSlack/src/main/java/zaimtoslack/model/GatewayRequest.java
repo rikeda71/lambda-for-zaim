@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class GatewayRequest {
   private String httpMethod;
-  private Object body;
+  private Map<String, Object> body;
   private String resource;
   private RequestContext requestContext;
   private Map<String, String> queryStringParameters;

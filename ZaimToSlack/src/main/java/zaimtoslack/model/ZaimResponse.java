@@ -13,6 +13,8 @@ public class ZaimResponse {
   @Getter @Setter private Map<String, String> headers;
   @Getter @Setter private int statusCode;
 
+  public ZaimResponse(){}
+
   public ZaimResponse(final String totalString, final Map<String, Integer> amountForCategory, final Map<String, String> headers, final int statusCode) {
     this.totalString = totalString;
     this.amountForCategory = amountForCategory;
