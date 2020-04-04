@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class GatewayRequest {
   private String httpMethod;
-  private Map<String, Object> body;
+  private String body;
   private String resource;
   private RequestContext requestContext;
   private Map<String, String> queryStringParameters;
@@ -19,6 +19,8 @@ public class GatewayRequest {
   private String path;
   private Boolean isBase64Encoded;
 
+  public GatewayRequest() {}
+
   @Data
   public static class RequestContext {
     private String resourceId;
@@ -28,6 +30,8 @@ public class GatewayRequest {
     private String accountId;
     private String stage;
     private Map<String, String> identity;
+
+    public RequestContext() {}
   }
 
 }

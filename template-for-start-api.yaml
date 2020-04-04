@@ -46,9 +46,6 @@ Resources:
       Environment:
         Variables:
           SLACK_BOT_USER_ACCESS_TOKEN: !Ref SlackBotUserAccessToken
-          SLACK_APP_AUTH_TOKEN: !Ref SlackAppAuthToken
-          SLACK_USER_ID:  !Ref SlackUserId
-          SLACK_USER_NAME: !Ref SlackUserName
           SLACK_CHANNEL_ID: !Ref SlackChannelId
       Events:
         ZaimToSlack:
@@ -73,12 +70,6 @@ Parameters:
   AccessTokenSecret:
     Type: String
   SlackBotUserAccessToken:
-    Type: String
-  SlackAppAuthToken:
-    Type: String
-  SlackUserId:
-    Type: String
-  SlackUserName:
     Type: String
   SlackChannelId:
     Type: String
