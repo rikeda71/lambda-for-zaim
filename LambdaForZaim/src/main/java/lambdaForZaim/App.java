@@ -42,7 +42,7 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
           apiRequester.requestIncomeAndAmountNDaysAgo(n);
     } else {
       var output = "{ \"message\": \"invalid `period` value. `period` must be 'month' or 'day'.\" }";
-      return new GatewayResponse(output, headers, 403);
+      return new GatewayResponse(output, new HashMap<String, Integer>(), headers, 403);
     }
 
     var valueStr = amountOnly ? "出費" : "収支";
@@ -53,8 +53,7 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
         valueStr,
         money.getTotal()
     );
-    var message = "{ \"message\": \"" + output + money.toStringForCategory() + "\n\"}";
-    return new GatewayResponse(message, headers, 200);
+    return new GatewayResponse(output, money.getAmountForCategory(), headers, 200);
   }
 
 }

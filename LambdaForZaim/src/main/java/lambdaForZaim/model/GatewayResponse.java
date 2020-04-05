@@ -4,19 +4,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * POJO containing response object for API Gateway.
  */
 public class GatewayResponse {
 
-    @Getter private final String body;
-    @Getter private final Map<String, String> headers;
-    @Getter private final int statusCode;
+    @Getter @Setter private String totalString;
+    @Getter @Setter private Map<String, Integer> amountForCategory;
+    @Getter @Setter private Map<String, String> headers;
+    @Getter @Setter private int statusCode;
 
-    public GatewayResponse(final String body, final Map<String, String> headers, final int statusCode) {
+    public GatewayResponse(final String totalString, final Map<String, Integer> amountForCategory, final Map<String, String> headers, final int statusCode) {
+        this.totalString = totalString;
+        this.amountForCategory = amountForCategory;
         this.statusCode = statusCode;
-        this.body = body;
         this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
     }
 

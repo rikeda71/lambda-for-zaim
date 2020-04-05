@@ -7,7 +7,7 @@ Description: >
 
 Globals:
   Function:
-    Timeout: 30
+    Timeout: 60
 
 Resources:
   LambdaForZaim:
@@ -29,6 +29,37 @@ Resources:
           Properties:
             Path: /api/moneyinfo
             Method: GET
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - lambda:ListVersionsByFunction
+              Resource: '*'
+  ZaimToSlack:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: zaimToSlack.zip
+      Handler: zaimtoslack.App::handleRequest
+      Runtime: java11
+      MemorySize: 256
+      Environment:
+        Variables:
+          SLACK_BOT_USER_ACCESS_TOKEN: !Ref SlackBotUserAccessToken
+          SLACK_CHANNEL_ID: !Ref SlackChannelId
+      Events:
+        ZaimToSlack:
+          Type: Api
+          Properties:
+            Path: /moneyinfo
+            Method: POST
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - lambda:ListVersionsByFunction
+              Resource: '*'
 Parameters:
   ConsumerKey:
     Type: String
@@ -37,6 +68,10 @@ Parameters:
   AccessToken:
     Type: String
   AccessTokenSecret:
+    Type: String
+  SlackBotUserAccessToken:
+    Type: String
+  SlackChannelId:
     Type: String
 
 Outputs:
@@ -49,3 +84,12 @@ Outputs:
   LambdaForZaimIamRole:
     Description: "Implicit IAM Role created for getting amount information function"
     Value: !GetAtt LambdaForZaimRole.Arn
+  ZaimToSlackApi:
+    Description: "API Gateway endpoint URL for Prod stage for getting amount information function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/moneyinfo"
+  ZaimToSlack:
+    Description: "Lambda Function for Zaim ARN"
+    Value: !GetAtt ZaimToSlack.Arn
+  ZaimToSlackIamRole:
+    Description: "Implicit IAM Role created for getting amount information function"
+    Value: !GetAtt ZaimToSlackRole.Arn
