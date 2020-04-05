@@ -70,9 +70,6 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     Map<String, String> parsedMap = parseSlackRequest(inputStr);
 
     try {
-      slackPost(
-          "AWS_ACCESS_KEY_ID: " + System.getenv("AWS_ACCESS_KEY_ID") + "\n"
-              + "AWS_SECRET_ACCESS_KEY: " + System.getenv("AWS_SECRET_ACCESS_KEY"));
       AWSLambda awsLambda = AWSLambdaClientBuilder.standard()
           .withCredentials(new EnvironmentVariableCredentialsProvider())
           .withRegion(Regions.AP_NORTHEAST_1).build();
@@ -94,6 +91,7 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     } catch (IOException e) {
       return postErrorToSlackAndHandleRequest(e, "IO error", headers);
     }
+
     slackPost(retText);
     return new GatewayResponse(retText, headers, 200);
   }
@@ -129,16 +127,17 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     amountOnly = amountPattern.matcher(eventText).find();
 
     // `\d + 日` ならn日分の費用に
-    var periodPattern = Pattern.compile("\\d{1,2}日分|前");
+    var periodPattern = Pattern.compile("\\d{1,3}日(分|前まで|間)");
     period = periodPattern.matcher(eventText).find() ? "day" : "month";
 
     // 何 月|日 分の情報を見るかを推定
-    var nPattern = Pattern.compile("\\d{1,2}(ヶ月|日|か月)");
+    System.out.println(eventText);
+    var nPattern = Pattern.compile("\\d{1,3}(ヶ月|日|か月)");
     Matcher matcher = nPattern.matcher(eventText);
     if (matcher.find()) {
-      var nRep = eventText.substring(matcher.start(), matcher.end());
-      nRep.replaceAll("月", "").replaceAll("日", "");
-      if (nRep.matches("\\d+")) {
+      var nRep = eventText.replaceAll("(ヶ月|日|か月).+", "")
+                          .replaceAll("<.+>\\s", "");
+      if (nRep.matches("\\d{1,3}")) {
         n = Integer.parseInt(nRep);
       }
     }
