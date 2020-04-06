@@ -73,3 +73,7 @@ fabric.properties
 modules.xml
 *.ipr
 *.toml
+
+.venv
+.vscode/
+.mypy_cache/
