@@ -32,6 +32,7 @@ import zaimtoslack.model.GatewayRequest;
 import zaimtoslack.model.GatewayResponse;
 import zaimtoslack.model.ZaimResponse;
 
+
 /**
  * Handler for requests to Lambda function.
  */
@@ -42,7 +43,6 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
   private final String SLACK_POST_URL = "https://slack.com/api/chat.postMessage";
 
   public GatewayResponse handleRequest(final GatewayRequest input, final Context context) {
-    // TODO: input インスタンスを上手く読み込めていない．jsonオブジェクトから変換しているもの
     Map<String, String> headers = new HashMap<>();
     String retText = "";
 
@@ -53,7 +53,7 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     if (input.getBody().contains("\"challenge\"")) {
       try{
         Map<String, String> map = objectMapper.readValue(
-            objectMapper.writeValueAsString(input.getBody()),
+            input.getBody(),
             new TypeReference<HashMap<String, String>>(){}
         );
         if (map.containsKey("challenge")) {
@@ -64,6 +64,9 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
       } catch (Exception e) {
         return postErrorToSlackAndHandleRequest(e, "auth error", headers);
       }
+    } else if(input.toString().contains("X-Slack-Retry-Reason=http_timeout")) {
+      // timeout measures
+      return new GatewayResponse("Duplicate Slack Request (slack bot retry request when receiving request within 3000 milliseconds)", headers, 200);
     }
 
     var inputStr = input.getBody().replace("}\"", "}");
@@ -131,7 +134,6 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     period = periodPattern.matcher(eventText).find() ? "day" : "month";
 
     // 何 月|日 分の情報を見るかを推定
-    System.out.println(eventText);
     var nPattern = Pattern.compile("\\d{1,3}(ヶ月|日|か月)");
     Matcher matcher = nPattern.matcher(eventText);
     if (matcher.find()) {
