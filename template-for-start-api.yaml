@@ -16,7 +16,7 @@ Resources:
       CodeUri: lambdaForZaim.zip
       Handler: lambdaForZaim.App::handleRequest
       Runtime: java11
-      MemorySize: 128
+      MemorySize: 256
       Environment:
         Variables:
           CONSUMER_KEY: !Ref ConsumerKey
