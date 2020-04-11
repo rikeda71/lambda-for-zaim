@@ -40,7 +40,6 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
   private static ObjectMapper objectMapper = new ObjectMapper();
   private final String SLACK_BOT_USER_ACCESS_TOKEN = System.getenv("SLACK_BOT_USER_ACCESS_TOKEN");
   private final String SLACK_CHANNEL_ID = System.getenv("SLACK_CHANNEL_ID");
-  private final String SLACK_POST_URL = "https://slack.com/api/chat.postMessage";
 
   public GatewayResponse handleRequest(final GatewayRequest input, final Context context) {
     Map<String, String> headers = new HashMap<>();
@@ -138,7 +137,9 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
     Matcher matcher = nPattern.matcher(eventText);
     if (matcher.find()) {
       var nRep = eventText.replaceAll("(ヶ月|日|か月).+", "")
-                          .replaceAll("<.+>\\s", "");
+                          .replaceAll("<[^<>]*>", "")
+                          .replaceAll("\\s+", "")
+                          .replaceAll("\n", "");
       if (nRep.matches("\\d{1,3}")) {
         n = Integer.parseInt(nRep);
       }
@@ -174,6 +175,7 @@ public class App implements RequestHandler<GatewayRequest, GatewayResponse> {
         + "}";
     try {
       HttpClient client = HttpClient.newBuilder().build();
+      var SLACK_POST_URL = "https://slack.com/api/chat.postMessage";
       HttpRequest request = HttpRequest.newBuilder(URI.create(SLACK_POST_URL))
                                        .setHeader("Content-Type", "application/json")
                                        .setHeader("Authorization", "Bearer " + SLACK_BOT_USER_ACCESS_TOKEN)
