@@ -29,7 +29,7 @@
     - リンクは`https://[channel name].slack.com/archives/[channel id]`という構造になっている
     
     ![copy_id](images/03_copy_slack_channel_id.png)
-                                                                                                                              +[set-using-app]
+    
 8. [ここ](https://api.slack.com/apps)にアクセスし，Slack App を作成する
 
     ![create_slack_app](images/04_create_slack_app.png)
